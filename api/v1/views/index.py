@@ -9,3 +9,16 @@ from models import storage
 def status():
     """Create status return"""
     return jsonify({'status': 'OK'})
+
+
+@app_views.route('/stats')
+def stats():
+    """count the objects number"""
+    stat = {
+             "amenities": storage.count("Amenity"),
+             "cities": storage.count("City"),
+             "places": storage.count("Place"),
+             "states": storage.count("State"),
+             "users": storage.count("User")
+    }
+    return jsonify(stat)
