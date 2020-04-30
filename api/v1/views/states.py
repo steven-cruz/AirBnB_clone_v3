@@ -6,7 +6,7 @@ from models import storage
 from models.state import State
 
 
- @app_views.route('/states/', methods=['GET'])
+@app_views.route('/states/', methods=['GET'])
 @app_views.route('/states/<state_id>', methods=['GET'])
 def all_states(state_id=None):
     '''Returns all states object in json format'''
