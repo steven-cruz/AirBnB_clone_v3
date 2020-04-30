@@ -81,7 +81,7 @@ class DBStorage:
 
         objects = self.all(cls).values()
         for obj in objects:
-            if isinstance(obj, cls) and obj.id == id:
+            if isinstance(obj, eval(cls)) and obj.id == id:
                 return obj
         return None
 

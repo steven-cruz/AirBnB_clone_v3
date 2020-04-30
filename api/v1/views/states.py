@@ -7,7 +7,7 @@ from models.state import State
 
 
 @app_views.route('/states/', methods=['GET'])
-@app_views.route('/states/<state_id>', methods=['GET'])
+@app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def all_states(state_id=None):
     '''Returns all states object in json format'''
     json_list = []
@@ -22,29 +22,19 @@ def all_states(state_id=None):
         abort(404)
 
 
-def attrib_update(obj, **args):
-    '''Helper function to update objects attributes to correct types'''
-    for key, value in args.items():
-        if key not in ['id', 'created_at', 'updated_at'] and hasattr(obj, key):
-            if isinstance(value, str):
-                value = value.replace("_", " ")
-            setattr(obj, key, value)
-
-
-@app_views.route('/states/', methods=['POST'])
+@app_views.route('/states/', methods=['POST'], strict_slashes=False)
 def create_state():
     '''Creates an instance of State and save it to storage'''
     form = request.get_json(force=True)
     if 'name' not in request.json:
         return jsonify({"error": "Missing name"}), 400
-    state_class = models.classes['State']
-    new_state = state_class()
-    attrib_update(new_state, **form)
+    new_state = State(**form)
     new_state.save()
     return jsonify(new_state.to_dict()), 201
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'])
+@app_views.route('/states/<state_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_state(state_id):
     '''Deletes a state object'''
     state_obj = storage.get('State', state_id)
@@ -56,7 +46,7 @@ def delete_state(state_id):
     return jsonify({})
 
 
-@app_views.route('/states/<state_id>', methods=['PUT'])
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     '''Updates State object attribute'''
     state_obj = storage.get('State', state_id)
